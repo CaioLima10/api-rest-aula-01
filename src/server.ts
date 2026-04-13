@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import { clientKnex } from './database.js'
 import { randomUUID } from 'node:crypto'
+import { env } from './env/index.js'
 
 const app = fastify()
 
@@ -18,7 +19,7 @@ app.get('/', async () => {
 
 app
   .listen({
-    port: 3333,
+    port: env.PORT,
   })
   .then(() => {
     console.log('HTTP Server Running!')
