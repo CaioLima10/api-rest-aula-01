@@ -22,6 +22,14 @@ export async function transactionsRoute(app: FastifyInstance) {
     return { transaction }
   })
 
+  app.get('/summary', async () => {
+    const summary = await clientKnex('transactions')
+      .sum('amount', { as: 'amount' })
+      .first()
+
+    return { summary }
+  })
+
   app.post('/', async (request: FastifyRequest, reply: FastifyReply) => {
     const transactionsSchema = z.object({
       text: z.string().nullable(),
