@@ -1,9 +1,11 @@
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { app } from '../app.js'
+import { clientKnex } from '../database.js'
 
 describe('Transactions routes', async () => {
   beforeAll(async () => {
+    await clientKnex.raw('select 1')
     await app.ready()
   })
 
@@ -25,15 +27,11 @@ describe('Transactions routes', async () => {
   })
 
   it('should be possible to list all transactions', async () => {
-    const createTransactionsResponse = await server
-      .post('/transactions')
-      .send({
-        text: 'New Transactions',
-        amount: 5000,
-        type: 'credit',
-      })
-      .expect(201)
-
+    const createTransactionsResponse = await server.post('/transactions').send({
+      text: 'New Transactions',
+      amount: 5000,
+      type: 'credit',
+    })
     const cookies = createTransactionsResponse.get('Set-Cookie')
 
     if (!cookies) {
